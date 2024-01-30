@@ -1,0 +1,51 @@
+name: "Deploy DSK"
+description: "Deploys Morphcast SDK"
+author: "Adapt"
+inputs:
+  aws-region:
+    description: "AWS region where servers reside"
+    required: false
+    default: "eu-west-1"
+  prefix:
+    description: " S3 bucket key prefix for files to deploy"
+    required: false
+    default: ""
+  release:
+    description: "Semantic versioning for release to deploy"
+    required: true
+  files-to-deploy:
+    description: "Comma separated list of files to deploy"
+    required: true
+  role-to-assume:
+    description: "ARN of the role to assume for deployment"
+    required: true
+  artefact-bucket:
+    description: "Name of the S3 bucket for deployment artefacts"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure AWS OIDC credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.role-to-assume }}
+        aws-region: ${{ inputs.aws-region }}
+        role-session-name: DeploySDKCD
+
+    - name: Upload artefact
+      shell: bash
+      run: |
+        FILES_TO_DEPLOY=(${FILES_TO_DEPLOY//,/ })
+        for FILENAME in "${FILES_TO_DEPLOY[@]}"; do
+          if [ -z "$PREFIX" ]; then
+            aws s3 cp $FILENAME s3://$S3_BUCKET_NAME/$RELEASE/$FILENAME
+          else
+            aws s3 cp $FILENAME s3://$S3_BUCKET_NAME/$RELEASE/$PREFIX/$FILENAME
+          fi
+        done
+      env:
+        RELEASE: ${{ inputs.release }}
+        PREFIX: ${{ inputs.prefix }}
+        FILES_TO_DEPLOY: ${{ inputs.files-to-deploy }}
+        S3_BUCKET_NAME: ${{ inputs.artefact-bucket }}
