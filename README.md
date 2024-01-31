@@ -1,6 +1,6 @@
-# deploy-sdk
+# deploy-cdn
 
-Deploy Morphcast SDK to A-dapt servers
+Deply to A-dapt CDN's
 
 ## Inputs
 
@@ -31,7 +31,7 @@ Deploy Morphcast SDK to A-dapt servers
 ## Example usage
 
 ```
-uses: A-dapt/deploy-sdk@v1.0
+uses: A-dapt/deploy-cdn@v1.0
 with:
   release: ${{ env.RELEASE }}
   files-to-deploy: |
