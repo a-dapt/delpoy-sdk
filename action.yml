@@ -6,21 +6,21 @@ inputs:
     description: "AWS region where servers reside"
     required: false
     default: "eu-west-1"
+  cdn-bucket:
+    description: "Name of the S3 bucket for the CDN"
+    required: true
+  files-to-deploy:
+    description: "List of files to deploy separated by newlines"
+    required: true
   prefix:
-    description: " S3 bucket key prefix for files to deploy"
+    description: "S3 bucket key prefix for files to deploy"
     required: false
     default: ""
   release:
     description: "Semantic versioning for release to deploy"
     required: true
-  files-to-deploy:
-    description: "List of files to deploy separated by newlines"
-    required: true
   role-to-assume:
     description: "ARN of the role to assume for deployment"
-    required: true
-  artefact-bucket:
-    description: "Name of the S3 bucket for deployment artefacts"
     required: true
 
 runs:
@@ -50,4 +50,4 @@ runs:
         RELEASE: ${{ inputs.release }}
         PREFIX: ${{ inputs.prefix }}
         FILES_TO_DEPLOY: ${{ inputs.files-to-deploy }}
-        S3_BUCKET_NAME: ${{ inputs.artefact-bucket }}
+        S3_BUCKET_NAME: ${{ inputs.cdn-bucket }}

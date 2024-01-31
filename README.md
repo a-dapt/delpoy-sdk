@@ -4,21 +4,21 @@ Deply to A-dapt CDN's
 
 ## Inputs
 
-### `artefact-bucket`
-
-**Required** Name of the S3 bucket for deployment artefacts
-
 ### `aws-region`
 
-**Optional**
+**Optional** AWS region to deploy to, defaults to `eu-west-1`
 
-### `prefix`
+### `cdn-bucket`
 
-**Optional** S3 bucket key prefix for files to deploy, defaults to none
+**Required** Name of the S3 bucket for the CDN
 
 ### `files-to-deploy`
 
 **Required** List of files to deploy separated by newlines
+
+### `prefix`
+
+**Optional** S3 bucket key prefix for files to deploy, defaults to none
 
 ### `release`
 
@@ -37,7 +37,7 @@ with:
   files-to-deploy: |
     sdk.js
     sdk.css
-  artefact-bucket: ${{ secrets.ADAPT_DEPLOYMENT_ARTEFACTS }}
+  cdn-bucket: ${{ secrets.S3_CDN_BUCKET }}
   role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_ADAPT_CORE_PLATFORM }}
 ```
 
