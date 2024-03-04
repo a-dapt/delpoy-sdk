@@ -6,8 +6,8 @@ inputs:
     description: "AWS region where servers reside"
     required: false
     default: "eu-west-1"
-  cdn-bucket:
-    description: "Name of the S3 bucket for the CDN"
+  bucket:
+    description: "Name of the S3 bucket to deploy to"
     required: true
   files-to-deploy:
     description: "List of files to deploy separated by newlines"
@@ -50,4 +50,4 @@ runs:
         RELEASE: ${{ inputs.release }}
         PREFIX: ${{ inputs.prefix }}
         FILES_TO_DEPLOY: ${{ inputs.files-to-deploy }}
-        S3_BUCKET_NAME: ${{ inputs.cdn-bucket }}
+        S3_BUCKET_NAME: ${{ inputs.bucket }}
