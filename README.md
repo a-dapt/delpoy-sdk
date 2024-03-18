@@ -30,8 +30,19 @@ Deply to A-dapt S3 Buckets
 
 ## Example usage
 
+The permissions are needed to interact with GitHub's OIDC Token endpoint. This is on the root of your workflow yaml file
+
+```yaml
+permissions:
+  id-token: write
+  contents: write
+  statuses: write
 ```
-uses: A-dapt/deploy-cdn@v1.0
+
+The following is an example of how to use this action in a workflow:
+
+```yaml
+uses: a-dapt/deploy-bucket@v1.0
 with:
   release: ${{ env.RELEASE }}
   files-to-deploy: |
@@ -40,8 +51,6 @@ with:
   bucket: ${{ secrets.S3_BUCKET }}
   role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_ADAPT_CORE_PLATFORM }}
 ```
-
-## TODO (Future versions)
 
 ## Release
 
