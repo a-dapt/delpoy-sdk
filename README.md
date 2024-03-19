@@ -12,9 +12,13 @@ Deply to A-dapt S3 Buckets
 
 **Required** Name of the S3 bucket to deploy to
 
+### `directories-to-deploy`
+
+**Optional** List of directories to deploy
+
 ### `files-to-deploy`
 
-**Required** List of files to deploy separated by newlines
+**Optional** List of files to deploy
 
 ### `prefix`
 
@@ -42,12 +46,11 @@ permissions:
 The following is an example of how to use this action in a workflow:
 
 ```yaml
-uses: a-dapt/deploy-bucket@v1.1
+uses: a-dapt/deploy-bucket@v1.2
 with:
   release: ${{ env.RELEASE }}
-  files-to-deploy: |
-    sdk.js
-    sdk.css
+  files-to-deploy: sdk.js sdk.css
+  directories-to-deploy: dist bin
   bucket: ${{ secrets.S3_BUCKET }}
   role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_ADAPT_CORE_PLATFORM }}
 ```

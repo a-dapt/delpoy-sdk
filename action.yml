@@ -9,8 +9,11 @@ inputs:
   bucket:
     description: "Name of the S3 bucket to deploy to"
     required: true
+  directories-to-deploy:
+    description: "List of directories to deploy"
+    required: true
   files-to-deploy:
-    description: "List of files to deploy separated by newlines"
+    description: "List of files to deploy"
     required: true
   prefix:
     description: "S3 bucket key prefix for files to deploy"
@@ -36,18 +39,26 @@ runs:
     - name: Upload artefact
       shell: bash
       run: |
-        IFS=$'\n' read -d '' -r -a filenames <<<"$FILES_TO_DEPLOY" || true
-        for filename in "${filenames[@]}"; do
-          if [[ -n "$filename" ]]; then
-            if [ -z "$PREFIX" ]; then
-              aws s3 cp $filename s3://$S3_BUCKET_NAME/$RELEASE/$filename
-            else
-              aws s3 cp $filename s3://$S3_BUCKET_NAME/$RELEASE/$PREFIX/$filename
-            fi
+        IFS=' ' read -r -a FILES_OR_PATTERNS <<< "$FILES_TO_DEPLOY"
+        IFS=' ' read -r -a DIRECTORIES <<< "$DIRECTORIES_TO_DEPLOY"
+
+        # Loop through files/patterns and upload each to S3
+        for pattern in "${FILES_OR_PATTERNS[@]}"; do
+          if [ -d "$pattern" ]; then
+            echo "$pattern is a directory, skipping..."
+          else
+            aws s3 cp "$pattern" "s3://$S3_BUCKET_NAME/$RELEASE/${PREFIX:-}"
           fi
+        done
+
+        # Loop through directories and upload each to S3
+        for dir in "${DIRECTORIES[@]}"; do
+          # Directly use the directory name in the S3 path
+          aws s3 cp "$dir" "s3://$S3_BUCKET_NAME/$RELEASE/${PREFIX:-}$dir" --recursive
         done
       env:
         RELEASE: ${{ inputs.release }}
         PREFIX: ${{ inputs.prefix }}
         FILES_TO_DEPLOY: ${{ inputs.files-to-deploy }}
+        DIRECTORIES_TO_DEPLOY: ${{ inputs.directories-to-deploy }}
         S3_BUCKET_NAME: ${{ inputs.bucket }}
