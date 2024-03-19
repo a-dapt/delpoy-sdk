@@ -46,13 +46,37 @@ permissions:
 The following is an example of how to use this action in a workflow:
 
 ```yaml
-uses: a-dapt/deploy-bucket@v1.2
+uses: a-dapt/deploy-bucket@v1.3
 with:
   release: ${{ env.RELEASE }}
   files-to-deploy: sdk.js sdk.css
   directories-to-deploy: dist bin
   bucket: ${{ secrets.S3_BUCKET }}
   role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_ADAPT_CORE_PLATFORM }}
+```
+
+### Deploying to S3 with Directories
+
+The deployment process uploads all files and directories from the specified source to an Amazon S3 bucket, organized by release and optionally, prefix. This ensures a direct replication of the source directory structure within the S3 bucket, adjusted only by the release and prefix.
+
+Example:
+
+Source:
+
+```
+dist/file1.js
+dist/dir1/file2.js
+```
+
+In S3:
+
+```
+<release>/file1.js
+<release>/dir1/file2.js
+
+# or with a prefix
+<release>/<prefix>/file1.js
+<release>/<prefix>/dir1/file2.js
 ```
 
 ## Release

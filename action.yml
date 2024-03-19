@@ -51,10 +51,15 @@ runs:
           fi
         done
 
-        # Loop through directories and upload each to S3
+        # Loop through directories and upload contents to S3 root
         for dir in "${DIRECTORIES[@]}"; do
-          # Directly use the directory name in the S3 path
-          aws s3 cp "$dir" "s3://$S3_BUCKET_NAME/$RELEASE/${PREFIX:-}$dir" --recursive
+          # Find all files within the directory, maintaining subdirectory structure but not the root directory name
+          while IFS= read -r -d '' file; do
+            # Extract the path relative to the directory being processed
+            relative_path="${file#$dir/}"
+            # Upload the file, preserving subdirectories if any, but not the root directory name
+            aws s3 cp "$file" "s3://$S3_BUCKET_NAME/$RELEASE/${PREFIX:-}$relative_path"
+          done < <(find "$dir" -type f -print0)
         done
       env:
         RELEASE: ${{ inputs.release }}
