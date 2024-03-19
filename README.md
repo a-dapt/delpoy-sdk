@@ -22,7 +22,7 @@ Deply to A-dapt S3 Buckets
 
 ### `prefix`
 
-**Optional** S3 bucket key prefix for files to deploy, defaults to none
+**Optional** S3 bucket key prefix for files to deploy, defaults to none (e.g. `my-prefix/`)
 
 ### `release`
 

@@ -16,7 +16,7 @@ inputs:
     description: "List of files to deploy"
     required: true
   prefix:
-    description: "S3 bucket key prefix for files to deploy"
+    description: "S3 bucket key prefix for files to deploy (e.g. 'my-app/')"
     required: false
     default: ""
   release:
