@@ -46,7 +46,7 @@ permissions:
 The following is an example of how to use this action in a workflow:
 
 ```yaml
-uses: a-dapt/deploy-bucket@v1.3
+uses: a-dapt/deploy-bucket@v1.4
 with:
   release: ${{ env.RELEASE }}
   files-to-deploy: sdk.js sdk.css
